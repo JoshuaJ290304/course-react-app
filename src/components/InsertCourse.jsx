@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const InsertCourse = () => {
+const API_URL = "http://192.168.33.245:5001/api/add-course";
 
+const InsertCourse = () => {
   const [input, setInput] = useState({
-    courseName: "",
-    courseCode: "",
-    courseDuration: "",
-    courseFee: ""
+    course_name: "",
+    duration: "",
+    fee: "",
+    mode: "",
+    trainer: ""
   });
 
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
 
   const inputHandler = (event) => {
     setInput({
@@ -19,86 +22,127 @@ const InsertCourse = () => {
     });
   };
 
-  const readValues = () => {
+  const submitHandler = () => {
+    axios
+      .post(API_URL, {
+        course_name: input.course_name,
+        duration: input.duration,
+        fee: Number(input.fee),
+        mode: input.mode,
+        trainer: input.trainer
+      })
+      .then(() => {
+        setMessage("Course added successfully.");
+        setMessageType("success");
 
-    axios.post(
-      "YOUR_POST_API_URL",
-      input
-    )
-    .then((response) => {
-      setMessage("Course added successfully.");
-    })
-    .catch(() => {
-      setMessage("Failed to add course.");
-    });
-
+        setInput({
+          course_name: "",
+          duration: "",
+          fee: "",
+          mode: "",
+          trainer: ""
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        setMessage("Failed to add course.");
+        setMessageType("danger");
+      });
   };
 
   return (
     <div className="container mt-5">
-      <div className="card shadow">
+      <div className="row justify-content-center">
+        <div className="col-md-7">
 
-        <div className="card-header bg-primary text-white text-center">
-          <h3>Insert Course</h3>
-        </div>
+          <div className="card shadow">
 
-        <div className="card-body">
-
-          {message && (
-            <div className="alert alert-info">
-              {message}
+            <div className="card-header bg-primary text-white text-center">
+              <h3>Insert Course</h3>
             </div>
-          )}
 
-          <div className="mb-3">
-            <label>Course Name</label>
-            <input
-              className="form-control"
-              name="courseName"
-              value={input.courseName}
-              onChange={inputHandler}
-            />
+            <div className="card-body">
+
+              {message !== "" && (
+                <div className={`alert alert-${messageType}`}>
+                  {message}
+                </div>
+              )}
+
+              <div className="mb-3">
+                <label className="form-label">Course Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="course_name"
+                  value={input.course_name}
+                  onChange={inputHandler}
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">Duration</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="duration"
+                  value={input.duration}
+                  onChange={inputHandler}
+                  placeholder="Eg: 7 Days"
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">Fee</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  name="fee"
+                  value={input.fee}
+                  onChange={inputHandler}
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">Mode</label>
+                <select
+                  className="form-select"
+                  name="mode"
+                  value={input.mode}
+                  onChange={inputHandler}
+                >
+                  <option value="">Select Mode</option>
+                  <option value="Online">Online</option>
+                  <option value="Offline">Offline</option>
+                  <option value="Hybrid">Hybrid</option>
+                </select>
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">Trainer</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="trainer"
+                  value={input.trainer}
+                  onChange={inputHandler}
+                />
+              </div>
+
+              <div className="d-grid">
+                <button
+                  className="btn btn-success"
+                  onClick={submitHandler}
+                >
+                  Submit
+                </button>
+              </div>
+
+            </div>
+
           </div>
-
-          <div className="mb-3">
-            <label>Course Code</label>
-            <input
-              className="form-control"
-              name="courseCode"
-              value={input.courseCode}
-              onChange={inputHandler}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label>Course Duration</label>
-            <input
-              className="form-control"
-              name="courseDuration"
-              value={input.courseDuration}
-              onChange={inputHandler}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label>Course Fee</label>
-            <input
-              className="form-control"
-              name="courseFee"
-              value={input.courseFee}
-              onChange={inputHandler}
-            />
-          </div>
-
-          <button
-            className="btn btn-success"
-            onClick={readValues}
-          >
-            Submit
-          </button>
 
         </div>
-
       </div>
     </div>
   );
