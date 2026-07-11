@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const API_URL = "http://192.168.33.245:5001/api/courses";
+const API_URL = "https://host-demo-app.onrender.com/api/courses";
 
 const ViewCourse = () => {
   const [courses, setCourses] = useState([]);
