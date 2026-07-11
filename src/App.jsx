@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import InsertCourse from "./components/InsertCourse";
 import ViewCourse from "./components/ViewCourse";
-import "./App.css";
 
 function App() {
   return (
